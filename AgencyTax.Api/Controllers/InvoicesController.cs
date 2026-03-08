@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using AgencyTax.Api.Models;
-using AgencyTax.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using AgencyTax.Api.Services;
+using AgencyTax.Api.DTOs;
 
 namespace AgencyTax.Api.Controllers
 {
@@ -9,30 +8,25 @@ namespace AgencyTax.Api.Controllers
     [Route("api/[controller]")]
     public class InvoicesController : ControllerBase
     {
-        private readonly AgencyTaxDbContext _context;
+        private readonly IInvoiceService _service;
 
-        public InvoicesController(AgencyTaxDbContext context)
+        public InvoicesController(IInvoiceService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Invoice>>> GetInvoices()
+        public async Task<ActionResult<List<InvoiceResponseDto>>> GetInvoices()
         {
-            return await _context.Invoices.ToListAsync();
+            var invoices = await _service.GetAllInvoicesAsync();
+            return Ok(invoices);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Invoice>> CreateInvoice(Invoice invoice)
+        public async Task<ActionResult<InvoiceResponseDto>> CreateInvoice(CreateInvoiceDto dto)
         {
-            invoice.TaxAmount = invoice.Amount * invoice.TaxRate;
-            invoice.TotalAmount = invoice.Amount + invoice.TaxAmount;
-            invoice.DateIssued = DateTime.UtcNow;
-
-            _context.Invoices.Add(invoice);
-            await _context.SaveChangesAsync();
-
-            return Ok(invoice);
+            var result = await _service.CreateInvoiceAsync(dto);
+            return Ok(result);
         }
     }
 }
