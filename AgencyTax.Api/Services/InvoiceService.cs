@@ -52,5 +52,21 @@ namespace AgencyTax.Api.Services
                 DateIssued = created.DateIssued
             };
         }
+        public async Task<MonthlyReportDto> GetMonthlyReportAsync(int year, int month)
+        {
+            var invoices = await _repository.GetByMonthAsync(year, month);
+
+            var report = new MonthlyReportDto
+            {
+                Year = year,
+                Month = month,
+                InvoiceCount = invoices.Count,
+                TotalRevenue = invoices.Sum(i => i.Amount),
+                TotalTaxCollected = invoices.Sum(i => i.TaxAmount),
+                TotalInvoicedAmount = invoices.Sum(i => i.TotalAmount)
+            };
+
+            return report;
+        }
     }
 }

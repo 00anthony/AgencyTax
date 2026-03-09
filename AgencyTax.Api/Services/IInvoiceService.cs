@@ -6,5 +6,7 @@ namespace AgencyTax.Api.Services
     {
         Task<List<InvoiceResponseDto>> GetAllInvoicesAsync();
         Task<InvoiceResponseDto> CreateInvoiceAsync(CreateInvoiceDto createInvoiceDto);
+
+        Task<MonthlyReportDto> GetMonthlyReportAsync(int year, int month);
     }
 }
