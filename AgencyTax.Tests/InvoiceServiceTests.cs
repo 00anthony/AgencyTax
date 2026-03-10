@@ -65,5 +65,19 @@ namespace AgencyTax.Tests
             Assert.Equal(30, report.TotalTaxCollected);
             Assert.Equal(330, report.TotalInvoicedAmount);
         }
+
+        [Fact]
+        public async Task CreateInvoiceAsync_ShouldThrowException_WhenTaxRateTooHigh()
+        {
+            var dto = new CreateInvoiceDto
+            {
+                ClientName = "Test",
+                Amount = 100,
+                TaxRate = 0.5m
+            };
+
+            await Assert.ThrowsAsync<ArgumentException>(() =>
+                _service.CreateInvoiceAsync(dto));
+        }
     }
 }

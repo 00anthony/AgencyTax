@@ -42,6 +42,11 @@ namespace AgencyTax.Api.Services
 
             var created = await _repository.AddAsync(invoice);
 
+            if (dto.TaxRate > 0.25m)
+            {
+                throw new ArgumentException("Tax rate exceeds allowed maximum.");
+            }
+
             return new InvoiceResponseDto
             {
                 Id = created.Id,
