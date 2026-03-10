@@ -1,6 +1,7 @@
 ﻿using AgencyTax.Api.DTOs;
 using AgencyTax.Api.Models;
 using AgencyTax.Api.Repositories;
+using AgencyTax.Api.Exceptions;
 
 namespace AgencyTax.Api.Services
 {
@@ -44,7 +45,7 @@ namespace AgencyTax.Api.Services
 
             if (dto.TaxRate > 0.25m)
             {
-                throw new ArgumentException("Tax rate exceeds allowed maximum.");
+                throw new BusinessRuleException("Tax rate exceeds allowed maximum.");
             }
 
             return new InvoiceResponseDto
